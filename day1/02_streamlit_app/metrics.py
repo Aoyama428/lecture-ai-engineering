@@ -93,7 +93,14 @@ def calculate_metrics(answer, correct_answer):
             # st.warning(f"関連性スコア計算エラー: {e}")
             relevance_score = 0.0 # エラー時は0
 
-    return bleu_score, similarity_score, word_count, relevance_score
+        # 評価指標の追加
+        # 1単語当たりの類似度スコア
+        try:
+            similarity_score_per_word = similarity_score/word_count
+        except Exception as e:
+            similarity_score_per_word = 0.0
+
+    return bleu_score, similarity_score, word_count, relevance_score, similarity_score_per_word
 
 def get_metrics_descriptions():
     """評価指標の説明を返す"""

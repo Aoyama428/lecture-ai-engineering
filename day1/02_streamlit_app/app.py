@@ -76,6 +76,12 @@ elif st.session_state.page == "履歴閲覧":
 elif st.session_state.page == "サンプルデータ管理":
     ui.display_data_page()
 
+# 改善例：UIを改良
+# --- スライダー ---
+st.subheader("生成設定")
+temp = st.slider("温度", 0, 100, 50)
+st.write(f"回答生成の温度設定（表示だけ）: {temp}")
+
 # --- フッターなど（任意） ---
 st.sidebar.markdown("---")
 st.sidebar.info("開発者: [Your Name]")
