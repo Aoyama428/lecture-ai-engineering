@@ -173,6 +173,7 @@ def test_model_reproducibility(sample_data, preprocessor):
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
 
+
 def test_model_memory_and_size(train_model):
     """モデルのサイズと推論時のメモリ使用量を検証"""
     model, X_test, _ = train_model
@@ -189,4 +190,6 @@ def test_model_memory_and_size(train_model):
     mem_diff_mb = (mem_after - mem_before) / (1024 * 1024)
 
     # 推論中のメモリ使用増加が100MB未満であること
-    assert mem_diff_mb < 100.0, f"推論中のメモリ使用量が多すぎます: {mem_diff_mb:.2f} MB"
+    assert (
+        mem_diff_mb < 100.0
+    ), f"推論中のメモリ使用量が多すぎます: {mem_diff_mb:.2f} MB"
