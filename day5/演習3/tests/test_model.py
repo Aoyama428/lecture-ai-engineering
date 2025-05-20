@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import pickle
 import time
+import psutil
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -171,3 +172,21 @@ def test_model_reproducibility(sample_data, preprocessor):
     assert np.array_equal(
         predictions1, predictions2
     ), "モデルの予測結果に再現性がありません"
+
+def test_model_memory_and_size(train_model):
+    """モデルのサイズと推論時のメモリ使用量を検証"""
+    model, X_test, _ = train_model
+
+    # モデルファイルサイズの確認（例：10MB以下）
+    model_size_mb = os.path.getsize(MODEL_PATH) / (1024 * 1024)
+    assert model_size_mb < 10.0, f"モデルサイズが大きすぎます: {model_size_mb:.2f} MB"
+
+    # 推論中のメモリ使用量を確認（RSS増加分）
+    process = psutil.Process(os.getpid())
+    mem_before = process.memory_info().rss
+    model.predict(X_test)
+    mem_after = process.memory_info().rss
+    mem_diff_mb = (mem_after - mem_before) / (1024 * 1024)
+
+    # 推論中のメモリ使用増加が100MB未満であること
+    assert mem_diff_mb < 100.0, f"推論中のメモリ使用量が多すぎます: {mem_diff_mb:.2f} MB"
